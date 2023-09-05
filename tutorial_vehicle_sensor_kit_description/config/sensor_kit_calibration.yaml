@@ -1,0 +1,29 @@
+sensor_kit_base_link:
+  camera0/camera_link:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  rs_helios_top_base_link:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  rs_bpearl_front_base_link:
+    x: 0.0
+    y: 0.0
+    z: -1.0
+    roll: -1.008
+    pitch: -1.6
+    yaw: 2.64
+  gnss_link:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
