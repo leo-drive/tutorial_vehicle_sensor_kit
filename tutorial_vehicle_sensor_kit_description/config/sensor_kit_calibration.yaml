@@ -1,29 +1,29 @@
 sensor_kit_base_link:
-  camera0/camera_link:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    roll: 0.0
-    pitch: 0.0
-    yaw: 0.0
   rs_helios_top_base_link:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    roll: 0.0
-    pitch: 0.0
-    yaw: 0.0
+    x: 0.000000
+    y: 0.000000
+    z: 0.000000
+    roll: 0.000000
+    pitch: -0.000000
+    yaw: 0.000000
   rs_bpearl_front_base_link:
-    x: 0.0
-    y: 0.0
-    z: -1.0
-    roll: -1.008
-    pitch: -1.6
-    yaw: 2.64
+    x: 0.029092
+    y: -0.426945
+    z: -1.070302
+    roll: 2.032926
+    pitch: -1.552687
+    yaw: -0.451952
+  camera0/camera_link:
+    x: 0.054564283153017916
+    y: 0.040947512210503106
+    z: -0.071735410952332
+    roll: -1.5517347113946862
+    pitch: -0.01711459479043047
+    yaw: -1.5694590141484235
   gnss_link:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    roll: 0.0
-    pitch: 0.0
-    yaw: 0.0
+    x: 0.000000
+    y: 0.000000
+    z: 0.000000
+    roll: 0.000000
+    pitch: -0.000000
+    yaw: 0.000000
