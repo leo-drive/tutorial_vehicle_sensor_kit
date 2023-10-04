@@ -1,10 +1,7 @@
 <launch>
   <arg name="launch_driver" default="true"/>
-  <arg name="camera_type" default="left"/>
-
   <!--    common parameters -->
   <arg name="image_0" default="camera_0" description="image raw topic name"/>
-  <arg name="image_number" default="1" description="choose image raw number(1-8)"/>
 
   <!--    tensorrt params -->
   <arg name="mode" default="FP32"/>
@@ -16,8 +13,7 @@
 
   <group>
     <push-ros-namespace namespace="camera"/>
-
-    <include if="$(eval &quot;'$(var image_number)'>='1'&quot;)" file="$(find-pkg-share common_sensor_launch)/launch/camera_node_container.launch.py">
+    <include file="$(find-pkg-share common_sensor_launch)/launch/camera_node_container.launch.py">
       <arg name="mode" value="$(var mode)"/>
       <arg name="input_image" value="$(var image_0)"/>
       <arg name="camera_container_name" value="front_camera_container"/>
@@ -28,24 +24,5 @@
       <arg name="use_multithread" value="$(var use_multithread)"/>
       <arg name="output_topic" value="camera0/rois0"/>
     </include>
-
-    <group>
-      <push-ros-namespace namespace="traffic_light"/>
-
-      <!-- (usb_cam_node is assumed to have launched on logging PC) -->
-      <node pkg="topic_tools" exec="relay" name="tl_camera_info_relay" output="log">
-        <param name="input_topic" value="$(var camera_type)/camera_info"/>
-        <param name="output_topic" value="camera_info"/>
-        <param name="type" value="sensor_msgs/msg/CameraInfo"/>
-        <param name="reliability" value="best_effort"/>
-      </node>
-
-      <node pkg="topic_tools" exec="relay" name="tl_compressed_image_relay" output="log">
-        <param name="input_topic" value="$(var camera_type)/image_raw/compressed"/>
-        <param name="output_topic" value="image_raw/compressed"/>
-        <param name="type" value="sensor_msgs/msg/CompressedImage"/>
-        <param name="reliability" value="best_effort"/>
-      </node>
-    </group>
   </group>
 </launch>
