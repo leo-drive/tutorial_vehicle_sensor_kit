@@ -1,26 +1,20 @@
 <launch>
   <arg name="launch_driver" default="true"/>
-  <arg name="gnss_receiver" default="ublox" description="ublox(default) or septentrio"/>
 
   <group>
     <push-ros-namespace namespace="gnss"/>
 
     <!-- Switch topic name -->
-    <let name="navsatfix_topic_name" value="ublox/nav_sat_fix" if="$(eval &quot;'$(var gnss_receiver)'=='ublox'&quot;)"/>
-    <let name="navsatfix_topic_name" value="septentrio/nav_sat_fix" if="$(eval &quot;'$(var gnss_receiver)'=='septentrio'&quot;)"/>
-    <let name="orientation_topic_name" value="/autoware_orientation"/>
+    <let name="navsatfix_topic_name" value="/clap/ros/gps_nav_sat_fix"/>
+    <let name="orientation_topic_name" value="/clap/autoware_orientation"/>
 
-    <!-- Ublox Driver -->
-    <group if="$(eval &quot;'$(var gnss_receiver)'=='ublox'&quot;)">
-      <node pkg="ublox_gps" name="ublox" exec="ublox_gps_node" if="$(var launch_driver)" respawn="true" respawn_delay="1.0">
-        <remap from="~/fix" to="~/nav_sat_fix"/>
-        <param from="$(find-pkg-share ublox_gps)/c94_f9p_rover.yaml"/>
+    <!-- CLAP GNSS Driver -->
+    <group if="$(eval &quot;'$(var launch_driver)'">
+      <node pkg="clap_b7_driver" exec="clap_b7_driver_node" name="clap_b7_driver" output="screen">
+        <param from="$(find-pkg-share clap_b7_driver)/config/clap_b7_driver.param.yaml"/>
       </node>
-    </group>
-
-    <!-- Septentrio GNSS Driver -->
-    <group if="$(eval &quot;'$(var launch_driver)' and '$(var gnss_receiver)'=='septentrio'&quot;)">
-      <include file="$(find-pkg-share septentrio_gnss_driver)/launch/mosaic_x5_rover.launch.xml"/>
+      <!-- ntrip Client -->
+      <include file="$(find-pkg-share ntrip_client_ros)/launch/ntrip_client_ros.launch.py"/>
     </group>
 
     <!-- NavSatFix to MGRS Pose -->
@@ -33,8 +27,23 @@
       <arg name="output_topic_gnss_fixed" value="fixed"/>
 
       <arg name="use_gnss_ins_orientation" value="true"/>
+      <!-- Please enter your gnss frame here -->
+      <arg name="gnss_frame" value="GNSS_INS/gnss_ins_link"/>
+    </include>
+  </group>
 
-      <arg name="gnss_frame" value="gnss_link"/>
+  <!-- IMU corrector -->
+  <group>
+    <push-ros-namespace namespace="imu"/>
+    <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
+      <arg name="input_topic" value="/sensing/gnss/clap/ros/imu"/>
+      <arg name="output_topic" value="imu_data"/>
+      <arg name="param_file" value="$(find-pkg-share individual_params)/config/$(var vehicle_id)/robione_sensor_kit/imu_corrector.param.yaml"/>
+    </include>
+    <include file="$(find-pkg-share imu_corrector)/launch/gyro_bias_estimator.launch.xml">
+      <arg name="input_imu_raw" value="/sensing/gnss/clap/ros/imu"/>
+      <arg name="input_twist" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
+      <arg name="imu_corrector_param_file" value="$(find-pkg-share individual_params)/config/$(var vehicle_id)/robione_sensor_kit/imu_corrector.param.yaml"/>
     </include>
   </group>
 </launch>
